@@ -1,0 +1,72 @@
+// Motor A connections
+int enA = 9;
+int in1 = 8;
+int in2 = 7;
+// Motor B connections
+int enB = 3;
+int in3 = 5;
+int in4 = 4;
+
+void setup() {
+	// Set all the motor control pins to outputs
+	pinMode(enA, OUTPUT);
+	pinMode(enB, OUTPUT);
+	pinMode(in1, OUTPUT);
+	pinMode(in2, OUTPUT);
+	pinMode(in3, OUTPUT);
+	pinMode(in4, OUTPUT);
+	
+	// Start the serial communication
+	Serial.begin(9600);
+	
+	// Turn off motors - Initial state
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, LOW);
+}
+
+void loop() {
+	// Check if a command is received
+	if (Serial.available() > 0) {
+		// Read the command
+		String command = Serial.readString();
+		
+		// Run the motor only if the command is "reverse"
+		if (command == "reverse") {
+			moveMotor("reverse");
+		} else if (command == "forward") {
+			moveMotor("forward");
+		}
+	}
+}
+
+void moveMotor(String direction) {
+	if (direction == "reverse") {
+		// Turn on motors and set to maximum speed
+		digitalWrite(in1, LOW);
+		digitalWrite(in2, HIGH);
+		digitalWrite(in3, LOW);
+		digitalWrite(in4, HIGH);
+		analogWrite(enA, 255);
+		analogWrite(enB, 255);
+	} else if (direction == "forward") {
+		// Turn on motors and set to maximum speed
+		digitalWrite(in1, HIGH);
+		digitalWrite(in2, LOW);
+		digitalWrite(in3, HIGH);
+		digitalWrite(in4, LOW);
+		analogWrite(enA, 255);
+		analogWrite(enB, 255);
+	}
+	
+	// Wait for 3 seconds
+	delay(3000);
+	
+	// Turn off motors
+	digitalWrite(in1, LOW);
+	digitalWrite(in2, LOW);
+	digitalWrite(in3, LOW);
+	digitalWrite(in4, LOW);
+}
+
